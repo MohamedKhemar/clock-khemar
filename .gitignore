@@ -1,0 +1,14 @@
+# Node.js
+node_modules/
+dist/
+*.log
+package-lock.json
+
+# TypeScript
+*.tsbuildinfo
+
+# Webpack
+.cache/
+
+# Environnements
+.env
