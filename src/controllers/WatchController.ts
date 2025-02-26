@@ -1,40 +1,34 @@
-import { WatchModel } from '../models/WatchModel';
-import { WatchView } from '../views/WatchView';
+import { WatchModel } from "../models/WatchModel";
+import { WatchView } from "../views/WatchView";
 
 export class WatchController {
-  private model: WatchModel;
-  private view: WatchView;
+    private model: WatchModel;
+    private view: WatchView;
 
-  constructor(model: WatchModel, view: WatchView) {
-    this.model = model;
-    this.view = view;
-  }
+    constructor(model: WatchModel, view: WatchView, watchElement: HTMLElement) {
+        this.model = model;
+        this.view = view;
 
-  public start(): void {
-    this.model.addListener(() => this.updateView());
+        // Attaching events to buttons inside each clock
+        watchElement.querySelector(".mode-btn")?.addEventListener("click", () => this.switchMode());
+        watchElement.querySelector(".increase-btn")?.addEventListener("click", () => this.increaseTime());
+        watchElement.querySelector(".light-btn")?.addEventListener("click", () => this.toggleLight());
 
-    const modeBtn = document.getElementById('mode-btn');
-    const increaseBtn = document.getElementById('increase-btn');
-    const lightBtn = document.getElementById('light-btn');
-
-    if (modeBtn && increaseBtn && lightBtn) {
-      modeBtn.addEventListener('click', () => this.switchMode());
-      increaseBtn.addEventListener('click', () => this.increaseTime());
-      lightBtn.addEventListener('click', () => this.toggleLight());
+        // Dynamic display update
+        this.model.addListener(() => this.updateView());
     }
-  }
 
-  private switchMode(): void {
-    this.model.togglEditMode();
-  }
+    private switchMode(): void {
+        this.model.togglEditMode();
+    }
 
-  private increaseTime(): void {
-    this.model.increaseTime();
-  }
+    private increaseTime(): void {
+        this.model.increaseTime();
+    }
 
-  private toggleLight(): void {
-    this.model.toggleLight();
-  }
+    private toggleLight(): void {
+        this.model.toggleLight();
+    }
 
   private updateView(): void {
     const time = this.model.getTime();

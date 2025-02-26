@@ -1,12 +1,11 @@
 import './index.css';
 
-import { WatchModel } from './models/WatchModel';
-import { WatchView } from './views/WatchView';
-import { WatchController } from './controllers/WatchController';
+import { ClockManagerModel } from './models/ClockManagerModel';
+import { ClockManagerView } from "./views/ClockManagerView";
+import { ClockManagerController } from "./controllers/ClockManagerController";
 
-const model = new WatchModel();
-const view = new WatchView();
-const controller = new WatchController(model, view);
+const clockManager = new ClockManagerModel();
+const clockView = new ClockManagerView();
+const clockController = new ClockManagerController(clockManager, clockView);
 
-controller.start();
 

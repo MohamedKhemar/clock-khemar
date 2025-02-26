@@ -3,10 +3,7 @@ export class WatchView {
     private watchContainer: HTMLElement;
     private blinkInterval: number | null = null;
   
-    constructor() {
-      const timeElement = document.getElementById('time-display');
-      const watchContainer = document.getElementById('watch-container');
-  
+    constructor(watchContainer : HTMLElement,timeElement: HTMLElement) {
       if (!timeElement || !watchContainer) {
         throw new Error('HTML elements not found');
       }
@@ -26,9 +23,9 @@ export class WatchView {
 
       // creating an HTML structure with spans to separate the parts
       this.timeElement.innerHTML = `
-          <span id="hours">${hours}</span>:
-          <span id="minutes">${minutes}</span>:
-          <span id="seconds">${seconds}</span>
+          <span class="hours">${hours}</span>:
+          <span class="minutes">${minutes}</span>:
+          <span class="seconds">${seconds}</span>
       `;
 
       // stop blinking
@@ -39,7 +36,7 @@ export class WatchView {
 
       // Checking editingPart to enable blinking
       if (editingPart) {
-          const elementToBlink = document.getElementById(editingPart);
+          const elementToBlink = this.timeElement.querySelector(`.${editingPart}`) as HTMLElement | null;
           if (elementToBlink) {
               let isVisible = true;
               this.blinkInterval = window.setInterval(() => {

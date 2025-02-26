@@ -7,8 +7,15 @@ export class WatchModel{
     private editingPart : 'hours' | 'minutes' | null;
     private listeners: (() => void)[] = [];
 
-    constructor() {
+    private timezoneOffset: number;
+    private format24h: boolean; 
+
+    constructor(timezoneOffset: number = 0) {
+        this.timezoneOffset = timezoneOffset;
+        this.format24h = true;
+
         const now = new Date();
+        now.setHours(now.getUTCHours() + this.timezoneOffset);
         this.hours = now.getHours();
         this.minutes = now.getMinutes();
         this.seconds = now.getSeconds();
@@ -39,14 +46,46 @@ export class WatchModel{
         }
     }
 
+    public resetTime(): void {
+        const now = new Date();
+        now.setHours(now.getUTCHours() + this.timezoneOffset);
+        this.hours = now.getHours();
+        this.minutes = now.getMinutes();
+        this.seconds = now.getSeconds();
+        this.notifyListeners();
+    }
+
+    public toggleFormat24h(): void {
+        this.format24h = !this.format24h;
+        this.notifyListeners();
+    }
+
     /**
      * 
      * @returns the time in the correct format
 
      */
-    public getTime() : string{
-        return `${this.formatNumber(this.hours)}:${this.formatNumber(this.minutes)}:${this.formatNumber(this.seconds)}`
+    public getTime(): string {
+        let displayHours = this.hours;
+        let period = '';
+    
+        if (!this.format24h) { // Mode AM/PM atcif
+            if (displayHours === 0) { // Minuit = 12:XX AM
+                displayHours = 12;
+                period = ' AM';
+            } else if (displayHours === 12) { // Midi = 12:XX PM
+                period = ' PM';
+            } else if (displayHours > 12) { // 13h-23h = PM
+                displayHours -= 12;
+                period = ' PM';
+            } else { // 1h-11h = AM
+                period = ' AM';
+            }
+        }
+    
+        return `${this.formatNumber(displayHours)}:${this.formatNumber(this.minutes)}:${this.formatNumber(this.seconds)}${period}`;
     }
+    
 
     /**
      * 
